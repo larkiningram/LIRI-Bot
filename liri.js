@@ -16,6 +16,7 @@ var log_this = [];
 var com;
 var item;
 
+
 function switchCom() {
 
     switch (command) {
@@ -25,6 +26,7 @@ function switchCom() {
             break;
         case "spotify-this-song":
             spot(userInput);
+            write(log_this);
             // log(log_this);
             break;
         case "movie-this":
@@ -44,34 +46,33 @@ switchCom();
 // concert
 function concert() {
 
-    var query = process.argv.slice(3).join("+");
+    var query = process.argv.slice(3).join("%20");
 
 
-    var queryURL = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp"
+    var queryURL = "https://rest.bandsintown.com/artists/"  + query + "/events?app_id=codingbootcamp"
     console.log(queryURL);
 
     axios.get(queryURL).then(function (response) {
-        console.log(response.tracks);
+
+        var venueName = response.data[0].venue.name;
+        var venueLocation = (response.data[0].venue.city + ",", response.data[0].venue.country);
+        var year = (response.data[0].datetime.slice(0,4));
+        var month = (response.data[0].datetime.slice(5,7));
+        var day = (response.data[0].datetime.slice(8,10));
+        var date = month + "/" + day + "/" + year;
+
+        console.log("Venue Name: ", venueName);
+        console.log("Venue Loctation: ", venueLocation);
+        console.log("Concert Date: ", date);
     })
-
-    // request(queryURL, function (error, response, body) {
-
-    //     if (!error && response.statusCode === 200) {
-
-    //         var JS = JSON.parse(body);
-    //         for (i = 0; i < JS.length; i++) {
-
-    //         }
-    //     }
-
-    // })
 };
 
 
-// spotify
+// spotify -- done
 function spot() {
     var searchTrack;
-    if (userInput === undefined) {
+    
+    if (process.argv.length === 3) {
         searchTrack = "Ace of Base The Sign"
     }
     else {
@@ -92,6 +93,9 @@ function spot() {
             console.log("Album: ", albumName);
             console.log("Spotify Link: ", spotifyLink);
 
+            log_this.push([command, songName]);
+            console.log(log_this);
+            return log_this
         });
 };
 
@@ -122,6 +126,7 @@ function doIt() {
 };
 
 function write() {
+    console.log(log_this)
     fs.writeFile("log.txt", log_this, function (err) {
         if (err) {
             console.log("error: ", err);
@@ -131,4 +136,3 @@ function write() {
 
     })
 };
-
