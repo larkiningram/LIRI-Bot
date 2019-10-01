@@ -16,6 +16,13 @@ var log_this = [];
 var com;
 var item;
 
+//concert vars
+var artistConcert = process.argv.slice(3).join(" ");
+var queryConcert = process.argv.slice(3).join("%20");
+
+//movie vars
+var movieName = process.argv.slice(3).join("+");
+
 
 function switchCom() {
 
@@ -30,11 +37,10 @@ function switchCom() {
             break;
         case "movie-this":
             movie(userInput);
-            // write(log_this);
+            write(log_this);
             break;
         case "do-what-it-says":
             doIt();
-            // write(log_this);
             break;
     }
 };
@@ -45,10 +51,7 @@ switchCom();
 // concert -- done
 function concert() {
 
-    var artist = process.argv.slice(3).join(" ");
-    var query = process.argv.slice(3).join("%20");
-
-    var queryURL = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp"
+    var queryURL = "https://rest.bandsintown.com/artists/" + queryConcert + "/events?app_id=codingbootcamp"
     console.log(queryURL);
 
     axios.get(queryURL).then(function (response) {
@@ -59,14 +62,15 @@ function concert() {
         var month = (response.data[0].datetime.slice(5, 7));
         var day = (response.data[0].datetime.slice(8, 10));
         var date = month + "/" + day + "/" + year;
-
+       
+        console.log(queryConcert, "concert information: ");
         console.log("Venue Name: ", venueName);
         console.log("Venue Loctation: ", venueLocation);
         console.log("Concert Date: ", date);
 
 
     })
-    log_this.push([command, artist]);
+    log_this.push([command, queryConcert]);
     return log_this
 
 };
@@ -74,20 +78,17 @@ function concert() {
 
 // spotify -- done
 function spot() {
-    var searchTrack;
 
-    if (process.argv.length === 3) {
-        searchTrack = "Ace of Base The Sign"
-    }
-    else {
-        searchTrack = userInput;
-    }
+    // if (process.argv.length === 3) {
+    //     userInput = "Ace of Base The Sign"
+    // }
+
     spotify.search({
         type: 'track',
-        query: searchTrack
+        query: userInput
     }).then(function (data) {
         var artistName = data.tracks.items[0].album.artists[0].name;
-        var songName = searchTrack;
+        var songName = userInput;
         var spotifyLink = data.tracks.items[0].album.artists[0].external_urls.spotify;
         var albumName = data.tracks.items[0].album.name;
 
@@ -97,14 +98,16 @@ function spot() {
         console.log("Spotify Link: ", spotifyLink);
 
     });
-    log_this.push([command, searchTrack]);
+    log_this.push([command, userInput]);
     return log_this
 };
 
-// movie
+// movie -- done
 function movie() {
 
-    var movieName = process.argv.slice(3).join("+");
+    if ((movieName === undefined) && (process.argv.length === 3)) {
+        movieName = "Mr. Nobody"
+    }
 
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
@@ -130,9 +133,11 @@ function movie() {
     
     })
 
+    log_this.push([command, movieName]);
+    return log_this
 };
 
-// ??
+// ?? -- done
 function doIt() {
 
     fs.readFile("random.txt", "utf8", function (err, data) {
@@ -142,11 +147,26 @@ function doIt() {
         }
 
         var dataArr = data.split(",");
+        var empty = [];
+        empty.push(dataArr[0], dataArr[1])
 
-        com = dataArr[0];
-        item = dataArr[1];
+        com = empty[0];
+        item = empty[1];
 
-        console.log(com, item)
+        // console.log(empty)
+
+        if (com === "concert-this") {
+            queryConcert = item;
+            concert(item);
+        }
+        else if (com === "spotify-this-song") {
+            userInput = item;
+            spot();
+        }
+        else if (com === "movie-this") {
+            movieName = item;
+            movie(item);
+        }
 
     })
     // console.log(com, item)
@@ -158,7 +178,6 @@ function write() {
         if (err) {
             console.log("error: ", err);
         }
-
         console.log("log.txt was updated!");
     })
 };
