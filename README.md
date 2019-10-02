@@ -2,7 +2,6 @@
 
 University of Texas at Austin Coding Bootcamp: Homework 8
 
-Clearly state the problem the app is trying to solve (i.e. what is it doing and why)
 LIRI Bot is a Language Interpretation and Recognition Interface. This program will take in user inputs from the command line and return information based on four predetermined key words: concert-this, spotify-this-song, movie-this, and do-what-it-says. 
 
 concert-this, along with an artist name, will provide the user with the venue name, location, and date of said artist's next concert. If no artist name is provided, the program will return information for Ace of Base.
@@ -15,8 +14,6 @@ do-what-it-says requires no second user input, and will take information from a 
 
 Give a high-level overview of how the app is organized
 
-Give start-to-finish instructions on how to run the app
-Include screenshots, gifs or videos of the app functioning
 Here is an example of how the code works: 
 ![preview](example.png)
 
