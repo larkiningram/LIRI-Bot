@@ -2,7 +2,7 @@
 
 ### University of Texas at Austin Coding Bootcamp: Homework 8
 
-LIRI Bot is a Language Interpretation and Recognition Interface. This program will take in user inputs from the command line and return information based on four predetermined key words: concert-this, spotify-this-song, movie-this, and do-what-it-says. 
+LIRI Bot is a Language Interpretation and Recognition Interface. This program will take in user inputs from the command line and return information based on four predetermined key words: *concert-this, spotify-this-song, movie-this, and do-what-it-says*. 
 
 **concert-this**, along with an *artist name*, will provide the user with the venue name, location, and date of said artist's next concert. If no artist name is provided, the program will return information for Ace of Base.
 
